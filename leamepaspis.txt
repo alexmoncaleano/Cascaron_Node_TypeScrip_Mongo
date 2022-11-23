@@ -1,0 +1,121 @@
+# Configuración del Workspace
+Opción File "save wokspace as"
+
+Icono de configuración (Piñon) -> settings
+Pestaña Workspace -> apperance -> color theme (4 opcion)
+
+
+# creación de package.json
+
+npm init
+
+#Librerias necesarias
+
+1) npm i cors (permitir o bloquear el acceso al backend)
+2) npm i morgan (es un loger para capturar logs, es visual para ver quien accede a la consola)
+3) npm i express (nos permite hacer nuestra aplicacion js en el backend) 
+4) para conectarnos a la base de datos
+npm i mongoose (es el que nos va a permitir conectarnos a mongo)
+npm i pg-promise ( esta para posgres)
+npm i MySQL-promise (esta para mysql)
+5) npm i bcryptjs (esta nos sirve para encriptar)
+6) npm i jsonwebtoken (para entregarle un jws a nuestro toque y analizarlo cuando nos lo envien) 
+
+#Instalar una extencion 
+ dotenv (nos ayuda a ver las configuraciones mas bonitas)
+
+7) Extensiones que nos ayudan como desarrolladores
+	npm i dotenv --save-dev (Esta libreria hace que se vea bonito el archivo de configuracion. Es una libreria que solamente la utilizamos cuando hacemos el codigo y le estamos diciendo que cuando enviemos el codigo no van)
+	npm i nodemon --save-dev (Esta libreria nos permite estar programando y que se compile automaticamente)
+observaciones: el --sabe-dev hace que al terminar un proyecto no envie las librerias a las que les pongas este codigo junto con el proyecto, todo lo que lleve npm i nodemon --save-dev es solo en la parte del desarrollo.
+ 
+8) Librerias para facilitar el desarrollo.
+
+	npm i @types/cors --save-dev (esta libreria me permite usar mas facil cors, la libreria que nos permite bloquear el acceso o permitir el acceso al backend) 
+	npm i @types/morgan --save-dev (lo mismo solo que para morgan)
+	npm i @types/express --save-dev (lo mismo soloque para express)
+	npm i @types/jsonwebtoken --save-dev (lo mismo solo que con jsonwebtoken)
+
+9)
+# Agregamos typeScript
+	tsc --init (esto nos va a agregar typescript en nuestro proyecto) Si genera error en powershop ponemos el codigo Get-ExecutionPolicy si nos sale restringido le ponemos Set-ExecutionPolicy, el nos pregunta que nivel de seguridad queremos poner a lo que le respondemos unrestricted, y luego nos pregunta si estamos seguros y le decimos Si. 
+
+	Sale esta respuesta
+
+	Created a new tsconfig.json with:                                                                      
+                                                                                                    TS 
+	  target: es2016
+	  module: commonjs
+	  strict: true
+	  esModuleInterop: true
+	  skipLibCheck: true
+	  forceConsistentCasingInFileNames: true
+
+
+	You can learn more at https://aka.ms/tsconfig
+	
+     Esto significa que es correcta la instalacion. 
+
+10) En el archivo tsconfig.json tenemos que hacer un cambio en la linea 52 aparece // "outDir": "./", le quitamos el comentado  "outDir": "./", y le ponemos "outDir": "./build", el build que añadimos le esta diciendo a la configuracion que el codigo que es para el cliente se guarda en esa carpeta.
+	recuerda: siempre cierra el archivo tsconfig.json es arriesgado tenerlo abierto, cualquier cambio puede dañar tu proyecto.
+
+	MUY IMPORTANTE: Si dañamos el tsconfig.json, se puede eliminar y con tsc --init en la terminal lo vuelve a crear. 
+
+11) Agregar dos Scrypt en el package.json, al abrir el archivo encontramos los Scripts
+
+	"dev": "nodemon build/index.js",(ejecuta el nodemon en el build y nos crea un index.js)
+	"build": "tsc -w" (este nos avisa si tenemos errores en el codigo)
+
+   Debe quedar asi:
+	"scripts": {
+    		"test": "echo \"Error: no test specified\" && exit 1",
+    		"dev": "nodemon build/index.js",
+	 	 "build": "tsc -w"
+  },
+
+12) Vamos a crear el cascaron de las carpetas
+
+	Creamos un nuevo folder en la carpeta principal que se llame src (src significa source) en esta carpeta va todo nuestro codigo fuente.
+
+		Dentro de src:
+			Creamos la carpeta configuracion
+			Creamos la carpeta entidad
+			Creamos la carpeta dao
+			Creamos la carpeta controlador
+			Creamos la carpeta esquema
+			Creamos la carpeta ruta
+			Creamos la carpeta middleware (en esta carpeta gestionaremos todo lo del jwt)
+
+	
+	Para entenderlo: el esquema de diseño es algo asi Entidad trabaja junto con esquema van amarraditos siempre, encima va el dao, luego el controlador, ruta 
+			
+			ruta
+			controlador
+			dao
+			Entidad trabaja junto con esquema
+
+13) En el src creamos un archivo index.ts (Este archivo index.ts va a ser nuestro main)
+
+	En esta carpeta vamos a poner el servidor 
+
+	// aca vamos a colocar el servidor
+
+	console.log("hola mundo cruel");
+
+14) Estamos practicamente listos, vamos a abrir cuatro terminal. 
+
+les cambiamos el nombre al primero: build, al segundo dev, al tercero cmd, y al cuarto ayy
+
+	De esta manera vamos a tener terminales independientes para lo que necesitemos con click derecho les cambiamos el nombre y el color. 
+
+15) en la terminal en build ponemos el comando
+
+	npm run build (Con esto le estamos diciendo a typeScript que empiece a revisar nuestro codigo)
+
+	Con Ctrl + c terminamos el proceso
+
+16) en la terminal en dev ponemos el comando
+
+	npm run dev (Con esto estamos iniciando nuestro backend)
+
+	Con Ctrl + c terminamos el proceso
