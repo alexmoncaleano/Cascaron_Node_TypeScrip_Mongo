@@ -7,6 +7,6 @@ const InmuebleScheme = new mongoose_1.Schema({
     city: { type: String, required: true, trim: true },
     bedrooms: { type: Number, required: true, trim: true },
     bathrooms: { type: Number, required: true, trim: true },
-    //location: { type: Types.ObjectId, ref: "Location"}
+    location: { type: mongoose_1.Types.ObjectId, ref: "Location" }
 }, { versionKey: false });
 exports.default = (0, mongoose_1.model)("Inmueble", InmuebleScheme, "Inmueble");

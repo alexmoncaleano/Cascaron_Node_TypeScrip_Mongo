@@ -9,7 +9,7 @@ const InmuebleScheme = new Schema<InmuebleEntity>(
     city: { type: String, required: true, trim: true },
     bedrooms: { type: Number, required: true, trim: true}, //lowercase: pasa todo a minusculas
     bathrooms: { type: Number, required: true, trim: true },
-    //location: { type: Types.ObjectId, ref: "Location"}
+    location: { type: Types.ObjectId, ref: "Location"}
   },
   { versionKey: false }
 );

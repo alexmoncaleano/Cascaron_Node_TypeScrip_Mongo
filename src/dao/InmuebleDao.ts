@@ -1,12 +1,28 @@
 import InmuebleScheme from "../scheme/InmuebleScheme";
+import LocationScheme from "../scheme/LocationScheme";
 import { Response } from "express";
 import cifrar from "bcryptjs";
 import jwt from "jsonwebtoken";
 
 
 class InmuebleDao {
+  protected static async inmuebleListForLocation(
+    lat: number,
+    long: number,
+    radius: number,
+    res: Response): Promise<any>{
+      const longitud = long;
+      const latitud = lat;
+      const radio = radius
+      db.location.find( {
+        loc: { $geoWithin: { $centerSphere: [ [ longitud, latitud ], radio ] } }
+      } )
+
+    }
+  
+
   protected static async inmuebleList(res: Response): Promise<any> {
-    const datos = await InmuebleScheme.find().sort({ _id: -1 }).exec();
+    const datos = await InmuebleScheme.find().sort({ _id: -1 }).populate("location").exec();;
     res.status(200).json(datos);
   }
   protected static async inmueblefindOne(
@@ -14,7 +30,7 @@ class InmuebleDao {
     res: Response
   ): Promise<any> {
     const jsonInmueble = { _id: identificador };
-    const existeInmueble = await InmuebleScheme.findOne(jsonInmueble).exec();
+    const existeInmueble = await InmuebleScheme.findOne(jsonInmueble).populate("location").exec();
     if (existeInmueble) {
       res.status(200).json(existeInmueble);
     } else {
@@ -31,19 +47,28 @@ class InmuebleDao {
     if (existe) {
       res.status(400).json({ respuesta: "El inmueble ya existe"});
     } else {
-      const objUser = new InmuebleScheme(parametros);
-      objUser.save((miError, miObjeto) => {
+      const objLocation = new LocationScheme(parametros.location);
+      objLocation.save((miError, miLocation) => {
         if (miError) {
-          res.status(400).json({ respuesta: "No se puede crear el inmueble" });
+          res.status(400).json({ respuesta: "No se puede crear la location"});
         } else {
-          res.status(200).json({
-            respuesta: "Inmueble creado exitosamente",
-            inmueble: miObjeto
-             
-          });
+          parametros.location=miLocation;
+          const objUser = new InmuebleScheme(parametros);
+          objUser.save((miError, miObjeto) => {
+            if (miError) {
+              res.status(400).json({ miError });
+            } else {
+              res.status(200).json({
+                respuesta: "Inmueble creado exitosamente",
+                inmueble: miObjeto
+                 
+              });
+            }
+          });          
         }
-      });
+
     }
+    )}
   }
   public static async deleteUser(parametro: any, res: Response): Promise<any> {
     const existe = await InmuebleScheme.findById(parametro);

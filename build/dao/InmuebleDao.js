@@ -13,17 +13,19 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const InmuebleScheme_1 = __importDefault(require("../scheme/InmuebleScheme"));
+const LocationScheme_1 = __importDefault(require("../scheme/LocationScheme"));
 class InmuebleDao {
     static inmuebleList(res) {
         return __awaiter(this, void 0, void 0, function* () {
-            const datos = yield InmuebleScheme_1.default.find().sort({ _id: -1 }).exec();
+            const datos = yield InmuebleScheme_1.default.find().sort({ _id: -1 }).populate("location").exec();
+            ;
             res.status(200).json(datos);
         });
     }
     static inmueblefindOne(identificador, res) {
         return __awaiter(this, void 0, void 0, function* () {
             const jsonInmueble = { _id: identificador };
-            const existeInmueble = yield InmuebleScheme_1.default.findOne(jsonInmueble).exec();
+            const existeInmueble = yield InmuebleScheme_1.default.findOne(jsonInmueble).populate("location").exec();
             if (existeInmueble) {
                 res.status(200).json(existeInmueble);
             }
@@ -41,15 +43,24 @@ class InmuebleDao {
                 res.status(400).json({ respuesta: "El inmueble ya existe" });
             }
             else {
-                const objUser = new InmuebleScheme_1.default(parametros);
-                objUser.save((miError, miObjeto) => {
+                const objLocation = new LocationScheme_1.default(parametros.location);
+                objLocation.save((miError, miLocation) => {
                     if (miError) {
-                        res.status(400).json({ respuesta: "No se puede crear el inmueble" });
+                        res.status(400).json({ respuesta: "No se puede crear la location" });
                     }
                     else {
-                        res.status(200).json({
-                            respuesta: "Inmueble creado exitosamente",
-                            inmueble: miObjeto
+                        parametros.location = miLocation;
+                        const objUser = new InmuebleScheme_1.default(parametros);
+                        objUser.save((miError, miObjeto) => {
+                            if (miError) {
+                                res.status(400).json({ miError });
+                            }
+                            else {
+                                res.status(200).json({
+                                    respuesta: "Inmueble creado exitosamente",
+                                    inmueble: miObjeto
+                                });
+                            }
                         });
                     }
                 });
